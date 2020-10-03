@@ -3,7 +3,7 @@ name: Test, dockerize and deploy
 on:
   workflow_dispatch:
   push:
-    branches: [*]
+    branches: [master]
 
 jobs:
   test:
@@ -29,9 +29,9 @@ jobs:
         run: docker login -u ${{ secrets.DOCKER_HUB_USER }}
           -p ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       - name: Build Docker image
-        run: docker build -t basilatawneh/Java_sum:latest .
+        run: docker build -t wherbawi/spring-app:latest .
       - name: Publish Docker image
-        run: docker push basilatawneh/Java_sum
+        run: docker push wherbawi/spring-app
 
   redeploy:
     needs: [docker]
@@ -41,10 +41,10 @@ jobs:
         uses: fifsky/ssh-action@master
         with: 
          command: |
-          docker pull basilatawneh/Java_sum:latest
+          docker pull wherbawi/spring-app:latest
           docker stop SpringApp
           docker system prune -f
-          docker run -d -p 91:8080 --name sumalq basilatawneh/Java_sum:latest
+          docker run -d -p 8080:8080 --name SpringApp wherbawi/spring-app:latest
          host: ${{ secrets.STAGING_SERVER_IP }}
          user: ${{ secrets.STAGING_SERVER_DEPLOY_USR }}
          key: ${{ secrets.STAGING_SERVER_KEY }}
