@@ -34,7 +34,7 @@ jobs:
         run: docker push wherbawi/spring-app
 
   redeploy:
-    needs: [docker]
+    needs: [docker]`
     runs-on: ubuntu-latest
     steps:
       - name: ssh connect and run container
